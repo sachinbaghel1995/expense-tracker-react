@@ -1,20 +1,33 @@
-import { useRef,useState } from "react"
+import { useContext, useRef,useState, } from "react"
 import classes from './AuthLoginForm.module.css'
+import AuthContext from "../store/auth-context"
+import React from "react"
+import { useNavigate } from "react-router-dom"
+
 const AuthLoginForm=()=>{
     const [isLogin,setIsLogin]=useState(true)
+    const authCtx=useContext(AuthContext)
+    const navigate=useNavigate()
     const switchAuthModeHandler = () => {
         setIsLogin((prevState) => !prevState);
       }
     const emailInputRef=useRef()
     const passwordInputRef=useRef()
     const confirmPasswordInputRef=useRef()
-    const submitHandler=(event)=>{
+    const submitHandler=async (event)=>{
         event.preventDefault()
         const enteredEmail=emailInputRef.current.value
         const enteredPassword=passwordInputRef.current.value
         const enteredConfirmPassword=confirmPasswordInputRef.current.value
-
-        fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDKVUvhqx7PsQwYCeAO2xbayozDMR_BRCU',
+        let url;
+        if(isLogin){
+            url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDKVUvhqx7PsQwYCeAO2xbayozDMR_BRCU'
+          }
+          else{
+            url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDKVUvhqx7PsQwYCeAO2xbayozDMR_BRCU'
+          }
+          try{
+        const res= await fetch(url,
             {
               method:'POST',
               body:JSON.stringify({
@@ -23,29 +36,25 @@ const AuthLoginForm=()=>{
                 confirmPassword:enteredConfirmPassword,
                 returnSecureToken:true
               }),
-              headers:{
-                'Content-Type':'application/json'
-              }
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+      
+            const data = await res.json();
+      
+            if (res.ok) {
+              navigate('/welcome');
+              const convertedData = JSON.stringify(data);
+              localStorage.setItem('idToken', convertedData);
+            authCtx.login(data)
+             } else {
+              throw new Error(data.error.message);
             }
-            ).then(res=>
-              {
-              
-              if(res.ok){
-        //   return res.json()
-        console.log('signUp')
-              }
-              else{
-                return res.json().then((data)=>{
-                 let errorMessage="Authentication Failed"
-                //  if(data && data.error && data.error.message){
-                //   errorMessage=data.error.message
-                //  }
-                throw new Error(errorMessage)
-                 
-                })
-              }
-            })
-    }
+          } catch (err) {
+            alert(err.message);
+          }
+        }
 
    
 
