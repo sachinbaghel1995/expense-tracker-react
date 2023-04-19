@@ -33,8 +33,8 @@ const UserProfileForm = () => {
           console.log(data);
   
         if (res.ok) {
-          // console.log(data);
-            // navigate('/home');
+          console.log(data);
+            navigate('/profile');
             setProfile({
                 name: data.displayName,
                 photoUrl: data.photoUrl,
@@ -49,7 +49,42 @@ const UserProfileForm = () => {
 
 
   
+ useEffect(() => {
+  const updateProfile = async () => {
+    try {
+      const res = await fetch(
+        'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDKVUvhqx7PsQwYCeAO2xbayozDMR_BRCU',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            idToken: JSON.parse(localStorage.getItem('idToken')).idToken,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
+      const data = await res.json();
+      if (res.ok && data.users[0].displayName && data.users[0].photoUrl) {
+        setProfile({
+          name: data.users[0].displayName,
+          photoUrl: data.users[0].photoUrl,
+        });
+      } else {
+        throw data.error;
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+  updateProfile();
+}, []);
+
+  useEffect(() => {
+    nameRef.current.value = profile.name;
+    photoRef.current.value = profile.photoUrl;
+  });
 
   return (
     <form className={classes.form} onSubmit={profileSubmitHandler}>
