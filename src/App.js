@@ -3,7 +3,7 @@ import './App.css';
 import AuthLoginForm from './components/AuthLoginForm';
 import { Navigate, Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
-import Welcome from './components/pages/Welcome';
+import UserProfile from './components/pages/UserProfile';
 import AuthContext from './store/auth-context';
 import { useContext } from 'react';
 import { redirect } from 'react-router-dom';
@@ -17,9 +17,10 @@ function App() {
      <Routes>
      <Route exact path='/' element={<AuthLoginForm/>}>
         </Route> 
-      
-     <Route exact path="welcome" element={<Welcome/> } >
+      <Route exact path="profile" element={<UserProfile/> } >
     </Route>
+    {/* <Route exact path="updateprofile" element={<UserProfile/> } >
+    </Route> */}
      </Routes>
     </div>
   );

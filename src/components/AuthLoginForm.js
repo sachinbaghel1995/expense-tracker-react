@@ -44,7 +44,7 @@ const AuthLoginForm=()=>{
             const data = await res.json();
       
             if (res.ok) {
-              navigate('/welcome');
+              navigate('/profile');
               const convertedData = JSON.stringify(data);
               localStorage.setItem('idToken', convertedData);
             authCtx.login(data)
