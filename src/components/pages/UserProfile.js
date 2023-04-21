@@ -43,6 +43,9 @@ const UserProfile = () => {
             <b> Complete now</b>
           </Link>
         </span>
+        <span>
+          <Link to='/verifyemail'>Verify Email</Link>
+        </span>
       </div>
       <UserProfileForm />
     </React.Fragment>

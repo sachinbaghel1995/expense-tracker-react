@@ -7,6 +7,7 @@ import UserProfile from './components/pages/UserProfile';
 import AuthContext from './store/auth-context';
 import { useContext } from 'react';
 import { redirect } from 'react-router-dom';
+import VerifyEmail from './components/VerifyEmail';
 
 
 function App() {
@@ -19,8 +20,8 @@ function App() {
         </Route> 
       <Route exact path="profile" element={<UserProfile/> } >
     </Route>
-    {/* <Route exact path="updateprofile" element={<UserProfile/> } >
-    </Route> */}
+    <Route exact path="verifyemail" element={<VerifyEmail/> } >
+    </Route>
      </Routes>
     </div>
   );
