@@ -9,6 +9,7 @@ import { useContext } from 'react';
 import { redirect } from 'react-router-dom';
 import VerifyEmail from './components/VerifyEmail';
 import MainNavigation from './components/MainNavigation';
+import ForgotPassword from './components/ForgotPassword';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
     </Route>
     <Route exact path="verifyemail" element={<VerifyEmail/> } >
     </Route>
+    <Route path='/resetpassword' element={<ForgotPassword />} />
      </Routes>
     </div>
   );

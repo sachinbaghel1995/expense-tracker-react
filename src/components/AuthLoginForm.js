@@ -3,6 +3,7 @@ import classes from './AuthLoginForm.module.css'
 import AuthContext from "../store/auth-context"
 import React from "react"
 import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 const AuthLoginForm=()=>{
     const [isLogin,setIsLogin]=useState(true)
@@ -75,6 +76,7 @@ return(
     <input type="password" ref={confirmPasswordInputRef}/>
     </div>
     <div className={classes.actions}>
+    {isLogin && <Link to='/resetpassword'>Forgot Password?</Link>}
     <button type="submit">{isLogin ? 'Login':'Create Account'}</button>
     <button  type='button' onClick={switchAuthModeHandler} className={classes.toggle}>
     {isLogin ? 'Create new account' : 'Login with existing account'}
