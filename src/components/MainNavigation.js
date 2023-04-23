@@ -38,6 +38,14 @@ const MainNavigation = () => {
           </li>
           <li>
             <NavLink
+              to="/expenses"
+              className={({ isActive }) => (isActive ? classes.active : "")}
+            >
+              Expenses
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/login"
               className={({ isActive }) => (isActive ? classes.active : "")}
             >

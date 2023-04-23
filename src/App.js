@@ -10,10 +10,11 @@ import { redirect } from 'react-router-dom';
 import VerifyEmail from './components/VerifyEmail';
 import MainNavigation from './components/MainNavigation';
 import ForgotPassword from './components/ForgotPassword';
-
+import Expenses from './components/Expenses';
 
 function App() {
   const authCtx=useContext(AuthContext)
+  const isLoggedIn=authCtx.isLoggedIn
   return (
     <div>
      <MainNavigation/>
@@ -25,6 +26,7 @@ function App() {
     <Route exact path="verifyemail" element={<VerifyEmail/> } >
     </Route>
     <Route path='/resetpassword' element={<ForgotPassword />} />
+    {isLoggedIn && <Route path='/expenses' element={<Expenses />} />}
      </Routes>
     </div>
   );
