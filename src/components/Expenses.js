@@ -97,13 +97,9 @@ const Expenses = (props) => {
         </form>
         <div>
         {expenseCtx.expenses.map((item) => (
-        <li key={item.description}>
-         {item.type}-
-         {item.description}-
-        {item.amount}
-       
-       
-       </li>
+    <ExpenseItem
+    item={item}
+    key={item.id}/>
       ))}
       </div>
     </div>
