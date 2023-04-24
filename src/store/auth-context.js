@@ -21,7 +21,7 @@ import React, { useState } from 'react'
         localStorage.setItem('idToken',idToken)
     }
     const logoutHandler=()=>{
-        setToken(null)
+        setToken(initialToken)
         setTimeout(()=>{
             localStorage.removeItem('idToken')
             

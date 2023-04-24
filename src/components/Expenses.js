@@ -1,11 +1,17 @@
 import React from 'react'
-import { useRef } from 'react'
+import { useRef ,useEffect} from 'react'
 import classes from './Expenses.module.css'
 import ExpenseContext from '../store/expense-context'
 import { useContext } from 'react'
 import ExpenseItem from './ExpenseItem'
 
+
 const Expenses = (props) => {
+    let userEmail;
+  if (localStorage.getItem('tokenId')) {
+    userEmail = JSON.parse(localStorage.getItem('tokenId')).email;
+    userEmail = userEmail.replace(/[@.]/g, '');
+  }
     const expenseCtx=useContext(ExpenseContext)
     const amountRef = useRef();
     const typeRef = useRef();
@@ -17,10 +23,52 @@ const Expenses = (props) => {
             description:descriptionRef.current.value,
             type:typeRef.current.value,
         }
-expenseCtx.addExpense(expenses)
-
+        fetch(
+            'https://expense-tracker-26afb-default-rtdb.firebaseio.com/undefinedexpenses.json',
+            {
+              method: 'POST',
+              body: JSON.stringify(expenses),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+      
+          amountRef.current.value = '';
+          descriptionRef.current.value = '';
+          typeRef.current.value = ''
+          expenseCtx.addExpense(expenses)
+        }
+          useEffect(() => {
+            const getItems = async () => {
+             
+                try {
+                  const res = await fetch(
+                    `https://expense-tracker-26afb-default-rtdb.firebaseio.com/${userEmail}undefinedexpenses.json`
+                  );
+        
+                  const data = await res.json();
+                  if (res.ok) {
+                    let retrievedData = [];
+                    
+        
+                    for (let key in data) {
+                      retrievedData.push({ id: key, ...data[key] });
+                      
+                    }
+                  
+                  } else {
+                    throw data.error;
+                  }
+                } catch (err) {
+                  console.log(err.message);
+                }
+              }
+            
+            getItems();
+          })
     
-    }
+
     
   return (
     <div>
