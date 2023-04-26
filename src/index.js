@@ -1,23 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom';
-import { AuthContextProvider } from './store/auth-context';
-import { ExpenseContextProvider } from './store/expense-context';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import { Provider } from "react-redux";
+import store from "./store/reduxStore";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-  <React.StrictMode>
-    <AuthContextProvider>
-      <ExpenseContextProvider>
-    
-    <App />
-    </ExpenseContextProvider>
-    </AuthContextProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+      <Provider store={store}>
+          <App />
+          </Provider>
+      
+    </React.StrictMode>
   </BrowserRouter>
 );
 

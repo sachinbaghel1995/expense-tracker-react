@@ -1,19 +1,24 @@
 import React from "react";
+import { useSelector,useDispatch } from "react-redux";
+import { loginActions } from "../store/loginSlice";
 
 import classes from "./MainNavigation.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import AuthContext from "../store/auth-context";
-import { useContext } from "react";
+
 
 const MainNavigation = () => {
-  const authCtx = useContext(AuthContext);
-  const isLoggedIn = authCtx.isLoggedIn;
-  const navigate = useNavigate();
 
-  const logoutHandler = () => {
-    authCtx.logout();
-    navigate("/login");
-  };
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+    const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+
+    const logoutHandler = () => {
+        dispatch(loginActions.logout());
+        navigate('/login');
+    }
+
+  
 
   return (
     <div className={classes.mainNav}>
@@ -54,9 +59,11 @@ const MainNavigation = () => {
           </li>
         </ul>
       </nav>
-      {isLoggedIn && <div className={classes.button}>
-        <button onClick={logoutHandler}>Logout</button>
-      </div>}
+       
+        <div className={classes.button}>
+          {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
+        </div>
+      
     </div>
   );
 };
