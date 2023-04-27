@@ -4,19 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import classes from "./Expenses.module.css";
 import ExpenseItems from "./ExpenseItems";
 import { expenseAction } from "../store/expenseSlice";
-import { Fragment } from "react";
+import { themeActions } from "../store/themeSlice";
+
 
 const Expenses = () => {
   
-
+  const [activatePremium, setActivatePremium] = useState(false)
   const amountRef = useRef();
   const typeRef = useRef();
   const descriptionRef = useRef();
   const dispatch = useDispatch();
   const expenseList = useSelector((state) => state.expense.expenses);
   const totalAmount = useSelector((state) => state.expense.totalAmount);
-
-
+  const themeMode = useSelector((state) => state.theme.theme)
   const email = JSON.parse(localStorage.getItem("idToken")).email;
   const emailUrl = email.replace(/[@.]/g, "");
  
@@ -142,15 +142,61 @@ const Expenses = () => {
     />
   ));
 
+  const activatePremiumHandler = () => {
+    setActivatePremium((preState) => {
+      if (preState) {
+        dispatch(themeActions.light());
+        return !preState;
+      } else {
+        dispatch(themeActions.dark());
+        return !preState;
+      }
+    });
+  };
+
   // creating the csv file to download
+  const title = ['Category', 'Amount', 'Description'];
+  const data = [title];
+
+  expenseList.forEach((item) => {
+    data.push([item.type, item.amount, item.description]);
+  });
+
+  const creatingCSV = data.map((row) => row.join(',')).join('\n');
+  const blob = new Blob([creatingCSV]);
 
   // dark mode handler
+  const darkModeHandler = () => {
+    if (themeMode === 'light') {
+      dispatch(themeActions.dark());
+    } else {
+      dispatch(themeActions.light());
+    }
+  };
+
+  if (totalAmount < 10000 && themeMode === 'dark') {
+    setActivatePremium(false);
+    dispatch(themeActions.light());
+  }
+  
 
   
 
-  //returning the component
+  
   return (
     <>
+      {totalAmount > 10000 && (
+          <div className={classes.activate}>
+            <button onClick={activatePremiumHandler}>
+              {activatePremium ? 'Deactivate Premium' : 'Activate Premium'}
+            </button>
+            {activatePremium && (
+              <button onClick={darkModeHandler}>
+                {themeMode === 'light' ? 'Dark Mode' : 'Light Mode'}
+              </button>
+            )}
+          </div>
+        )}
       <form className={classes.form} onSubmit={addExpenseHandler}>
         <div className={classes.type}>
           <label>Expense Category: </label>
@@ -180,6 +226,11 @@ const Expenses = () => {
             <span className={classes.titletype}>Type</span>
             <span className={classes.titleamount}>Amount</span>
             <span className={classes.titledescription}>Description</span>
+            {totalAmount > 10000 && activatePremium && (
+                <a className={classes.a} href={URL.createObjectURL(blob)} download='expenses.csv'>
+                  Download
+                </a>
+              )}
           </div>
           {newExpenseList}
           <div className={classes.total}>Total = Rs.{totalAmount}</div>
